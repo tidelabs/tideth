@@ -9,7 +9,7 @@ use ethcontract::{
 use std::{convert::TryInto, str::FromStr};
 use tideth::{router::RouterClient, safe::SafeClient};
 
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
 
 const ERC20_ADDRESS: Option<&str> = None;
 const ROUTER_ADDRESS: Option<&str> = None;

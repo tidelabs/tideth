@@ -2,8 +2,8 @@ use dotenv::dotenv;
 use ethcontract::{transport::DynTransport, Account, Http, PrivateKey, Web3};
 use std::str::FromStr;
 
-ethcontract::contract!("./artifacts/contracts/Tether.sol/Tether.json");
-ethcontract::contract!("./artifacts/contracts/Circle.sol/Circle.json");
+ethcontract::contract!("artifacts/contracts/Tether.sol/Tether.json");
+ethcontract::contract!("artifacts/contracts/Circle.sol/Circle.json");
 
 #[tokio::main]
 async fn main() {

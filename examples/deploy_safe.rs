@@ -3,7 +3,7 @@ use ethcontract::{transport::DynTransport, Account, Address, Http, PrivateKey, W
 use std::str::FromStr;
 use tideth::safe::SafeClient;
 
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
 
 // const URL: &str = "https://ropsten.infura.io/v3/2155bb47548546a592f44b2786b59590";
 // const URL: &str = "http://localhost:8545";

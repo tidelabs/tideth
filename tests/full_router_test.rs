@@ -6,9 +6,9 @@ use ethcontract::{
 use futures::{join, stream::StreamExt};
 use std::str::FromStr;
 
-ethcontract::contract!("./artifacts/contracts/FeeCoin.sol/ERC20.json");
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
-ethcontract::contract!("./artifacts/contracts/Router.sol/Router.json");
+ethcontract::contract!("artifacts/contracts/FeeCoin.sol/ERC20.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/Router.sol/Router.json");
 
 const ETH_URL: &str = "http://localhost:8545";
 

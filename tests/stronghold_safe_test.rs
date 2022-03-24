@@ -6,7 +6,7 @@ use ethcontract::{
 use iota_stronghold::{Location, ProcResult, Procedure, ResultMessage, Stronghold};
 use tideth::{router::RouterClient, safe::SafeClient};
 
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
 
 const ROUTER_ADDRESS: Option<&str> = None;
 const SAFE_ADDRESS: Option<&str> = None;
