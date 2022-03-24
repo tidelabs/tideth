@@ -1,0 +1,26 @@
+[package]
+name = "tideth"
+version = "0.0.1"
+publish = false
+edition = "2018"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+ethcontract = { git = "https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs.git", branch = "main" }
+ethcontract-common = "0.15.3"
+futures = "0.3"
+tokio = { version = "1.6", features = ["macros"] }
+hex = "0.4.3"
+serde_json = "1.0"
+libsecp256k1 = { version = "0.5", default-features = false, features = [ "hmac", "static-context" ] }
+tiny-keccak = { version = "2.0", features = [ "keccak" ] }
+thiserror = "1.0.25"
+rustc-hex = "2.1.0"
+
+[dev-dependencies]
+dotenv = "0.15.0"
+rand = "0.8.4"
+iota_stronghold = { git = "https://github.com/tide-labs/stronghold.rs", branch = "dev" }
+actix = "0.12"
+anyhow = "1.0"
+
