@@ -9,7 +9,7 @@ use ethcontract::{
 use std::convert::TryInto;
 use tideth::safe::SafeClient;
 
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
 
 #[tokio::test]
 async fn main() {

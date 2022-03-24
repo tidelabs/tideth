@@ -10,8 +10,8 @@ pub struct DepositEvent {
   pub blockheight: u64,
 }
 
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
-ethcontract::contract!("./artifacts/contracts/Router.sol/Router.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/Router.sol/Router.json");
 
 #[tokio::test]
 async fn main() {

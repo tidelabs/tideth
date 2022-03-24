@@ -2,7 +2,7 @@ use dotenv::dotenv;
 use ethcontract::{transport::DynTransport, Http, Web3};
 use tideth::router::RouterClient;
 
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
 
 const ROUTER_ADDRESS: &str = "0xaa57cd19ae5ed73ea4be754051eb5933d1efd7e0";
 

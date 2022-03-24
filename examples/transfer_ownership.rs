@@ -3,7 +3,7 @@ use ethcontract::{transport::DynTransport, Account, Http, PrivateKey, Web3};
 use std::str::FromStr;
 use tideth::{router::RouterClient, safe::SafeClient};
 
-ethcontract::contract!("./artifacts/contracts/RustCoin.sol/RustCoin.json");
+ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
 
 const ROUTER_ADDRESS: &str = "0xae8a6463bf8449e6b5ee8277924cd6132b809be4";
 const SAFE_ADDRESS: &str = "0x971c11eb24778bf6824c82f0e82d6530bdeff7a2";
