@@ -8,7 +8,9 @@ use ethcontract::{
 };
 use futures::{channel::mpsc, sink::SinkExt, stream::StreamExt};
 
-ethcontract::contract!("artifacts/contracts/Router.sol/Router.json");
+ethcontract::contract!(
+  "https://raw.githubusercontent.com/tide-labs/primitives/dev/dist/contracts/Router.json"
+);
 
 #[derive(Debug, Clone)]
 pub struct DepositEvent {

@@ -8,8 +8,12 @@ use ethcontract::{
   Bytes,
 };
 
-ethcontract::contract!("artifacts/contracts/GnosisSafe.sol/GnosisSafe.json");
-ethcontract::contract!("artifacts/contracts/GnosisSafeProxy.sol/GnosisSafeProxy.json");
+ethcontract::contract!(
+  "https://raw.githubusercontent.com/tide-labs/primitives/dev/dist/contracts/GnosisSafe.json"
+);
+ethcontract::contract!(
+  "https://raw.githubusercontent.com/tide-labs/primitives/dev/dist/contracts/GnosisSafeProxy.json"
+);
 
 #[derive(Clone)]
 pub struct SafeClient {
