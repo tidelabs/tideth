@@ -1,7 +1,7 @@
 // Copyright 2021-2022 Semantic Network Ltd.
-// This file is part of tidext.
+// This file is part of tideth.
 
-// tidext is free software: you can redistribute it and/or modify
+// tideth is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
@@ -12,7 +12,7 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with tidext.  If not, see <http://www.gnu.org/licenses/>.
+// along with tideth.  If not, see <http://www.gnu.org/licenses/>.
 
 use ethcontract::{
   errors::ExecutionError,
