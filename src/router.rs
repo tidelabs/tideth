@@ -24,9 +24,7 @@ use ethcontract::{
 };
 use futures::{channel::mpsc, sink::SinkExt, stream::StreamExt};
 
-ethcontract::contract!(
-  "https://raw.githubusercontent.com/tide-labs/primitives/dev/dist/contracts/Router.json"
-);
+ethcontract::contract!("https://github.com/tide-labs/tideth/releases/latest/download/Router.json");
 
 #[derive(Debug, Clone)]
 pub struct DepositEvent {
