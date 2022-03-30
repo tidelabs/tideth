@@ -1,0 +1,41 @@
+name: Publish draft release
+
+on:
+  push:
+    tags:
+      # Catches v1.2.3 and v1.2.3-rc1
+      - v[0-9]+.[0-9]+.[0-9]+*
+
+jobs:
+  draft-tideth:
+    runs-on: ubuntu-latest
+    strategy:
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Compile contract
+        run: |
+          yarn
+          yarn hardhat compile
+
+      - name: Upload all contracts artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: tideth-contract
+          path: artifacts/contracts
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          name: tideth ${{ github.ref }}
+          files: |
+            artifacts/contracts/GnosisSafe.sol/GnosisSafe.json
+            artifacts/contracts/GnosisSafeProxy.sol/GnosisSafeProxy.json
+            artifacts/contracts/Router.sol/Router.json

@@ -6,8 +6,8 @@ edition = "2018"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-ethcontract = { git = "https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs.git", branch = "main" }
-ethcontract-common = "0.15.3"
+ethcontract = { git = "https://github.com/tide-labs/ethcontract", branch = "dev" }
+ethcontract-common = { git = "https://github.com/tide-labs/ethcontract", branch = "dev" }
 futures = "0.3"
 tokio = { version = "1.6", features = ["macros"] }
 hex = "0.4.3"
@@ -23,4 +23,3 @@ rand = "0.8.4"
 iota_stronghold = { git = "https://github.com/tide-labs/stronghold.rs", branch = "dev" }
 actix = "0.12"
 anyhow = "1.0"
-
