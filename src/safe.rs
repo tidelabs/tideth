@@ -25,10 +25,10 @@ use ethcontract::{
 };
 
 ethcontract::contract!(
-  "https://raw.githubusercontent.com/tide-labs/primitives/dev/dist/contracts/GnosisSafe.json"
+  "https://github.com/tide-labs/tideth/releases/latest/download/GnosisSafe.json"
 );
 ethcontract::contract!(
-  "https://raw.githubusercontent.com/tide-labs/primitives/dev/dist/contracts/GnosisSafeProxy.json"
+  "https://github.com/tide-labs/tideth/releases/latest/download/GnosisSafeProxy.json"
 );
 
 #[derive(Clone)]
