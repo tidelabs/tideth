@@ -3,7 +3,6 @@ name = "tideth"
 version = "0.0.1"
 publish = false
 edition = "2018"
-license = "MIT OR Apache-2.0"
 
 [dependencies]
 ethcontract = { git = "https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs.git", branch = "main" }
