@@ -24,12 +24,8 @@ use ethcontract::{
   Bytes,
 };
 
-ethcontract::contract!(
-  "https://github.com/tidelabs/tideth/releases/latest/download/GnosisSafe.json"
-);
-ethcontract::contract!(
-  "https://github.com/tidelabs/tideth/releases/latest/download/GnosisSafeProxy.json"
-);
+ethcontract::contract!("https://tidefi-contracts.s3.eu-west-1.amazonaws.com/GnosisSafe.json");
+ethcontract::contract!("https://tidefi-contracts.s3.eu-west-1.amazonaws.com/GnosisSafeProxy.json");
 
 #[derive(Clone)]
 pub struct SafeClient {
