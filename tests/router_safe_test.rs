@@ -142,6 +142,7 @@ async fn main() {
         claimdata,
         signatures,
         0,
+        None,
       )
       .await
       .expect("Couldn't execute the Claim");
@@ -174,6 +175,7 @@ async fn main() {
       withdrawaldata,
       signatures,
       0,
+      None,
     )
     .await
     .expect("Couldn't execute the TX");

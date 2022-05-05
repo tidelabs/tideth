@@ -219,12 +219,13 @@ impl SafeClient {
     to: Address,
     amount: u128,
     signatures: Vec<u8>,
+    gas: Option<u128>,
   ) -> Result<(Vec<u8>, u128)> {
     let data = self._make_erc20_data(to, amount)?;
     let safe = GnosisSafe::at(&self.web3, self.address);
     Ok(
       self
-        ._exec(&safe, from_account, erc20_address, 0, data, signatures)
+        ._exec(&safe, from_account, erc20_address, 0, data, signatures, gas)
         .await?,
     )
   }
@@ -235,11 +236,12 @@ impl SafeClient {
     to: Address,
     amount: u128,
     signatures: Vec<u8>,
+    gas: Option<u128>,
   ) -> Result<(Vec<u8>, u128)> {
     let safe = GnosisSafe::at(&self.web3, self.address);
     Ok(
       self
-        ._exec(&safe, from_account, to, amount, Vec::new(), signatures)
+        ._exec(&safe, from_account, to, amount, Vec::new(), signatures, gas)
         .await?,
     )
   }
@@ -251,11 +253,12 @@ impl SafeClient {
     data: Vec<u8>,
     signatures: Vec<u8>,
     value: u128,
+    gas: Option<u128>,
   ) -> Result<(Vec<u8>, u128)> {
     let safe = GnosisSafe::at(&self.web3, self.address);
     Ok(
       self
-        ._exec(&safe, from_account, address, value, data, signatures)
+        ._exec(&safe, from_account, address, value, data, signatures, gas)
         .await?,
     )
   }
@@ -268,6 +271,7 @@ impl SafeClient {
     amount: u128,
     data: Vec<u8>,
     signatures: Vec<u8>,
+    gas: Option<u128>,
   ) -> Result<(Vec<u8>, u128)> {
     let nonce = self
       .web3
@@ -276,7 +280,7 @@ impl SafeClient {
       .await?;
     // let gas_price = self.web3.eth().gas_price().await?;
     let address_0: Address = utils::zero_address();
-    let tx_result = safe
+    let tx = safe
       .exec_transaction(
         to,
         amount.into(),
@@ -292,9 +296,13 @@ impl SafeClient {
         Bytes(signatures),
       )
       .from(from_account)
-      .nonce(nonce)
-      .send()
-      .await?;
+      .nonce(nonce);
+    let tx_result = if let Some(g) = gas {
+      tx.gas(g.into()).send().await?
+    } else {
+      // web3 will estimate gas
+      tx.send().await?
+    };
     Ok(match tx_result {
       TransactionResult::Hash(h) => (h.0.to_vec(), 0), // should not ever happen
       TransactionResult::Receipt(r) => {
