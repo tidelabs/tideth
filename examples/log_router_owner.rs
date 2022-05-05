@@ -20,7 +20,7 @@ use tideth::router::RouterClient;
 
 ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
 
-const ROUTER_ADDRESS: &str = "0xaa57cd19ae5ed73ea4be754051eb5933d1efd7e0";
+const ROUTER_ADDRESS: &str = "0xe72b6a5f4cc34dfa68e08f82d6d16055a513842a";
 
 #[tokio::main]
 async fn main() {
