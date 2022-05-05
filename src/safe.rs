@@ -77,6 +77,22 @@ impl SafeClient {
     Ok(proxy.address().to_string())
   }
 
+  pub async fn deploy_with_factory(
+    &mut self,
+    account: Account<DynTransport>,
+    factory_address: Address,
+  ) -> Result<String> {
+    let singleton = GnosisSafe::at(&self.web3, factory_address);
+    // Deploy the Gnosis Safe Proxy
+    let proxy = GnosisSafeProxy::builder(&self.web3, singleton.address())
+      //.gas(500_000_u64.into())
+      .from(account)
+      .deploy()
+      .await?;
+    self.address = proxy.address();
+    Ok(proxy.address().to_string())
+  }
+
   pub async fn nonce(&self) -> Result<u64> {
     let safe = GnosisSafe::at(&self.web3, self.address);
     let n = safe.nonce().call().await?;
@@ -290,6 +306,57 @@ impl SafeClient {
         (r.transaction_hash.0.to_vec(), gas)
       }
     })
+  }
+
+  pub async fn estimate_gas_with_data(
+    &self,
+    from_account: Account<DynTransport>,
+    address: H160,
+    data: Vec<u8>,
+    signatures: Vec<u8>,
+    value: u128,
+  ) -> Result<u128> {
+    let safe = GnosisSafe::at(&self.web3, self.address);
+    Ok(
+      self
+        ._estimate_gas(&safe, from_account, address, value, data, signatures)
+        .await?,
+    )
+  }
+
+  async fn _estimate_gas(
+    &self,
+    safe: &gnosis_safe::Contract,
+    from_account: Account<DynTransport>,
+    to: Address,
+    amount: u128,
+    data: Vec<u8>,
+    signatures: Vec<u8>,
+  ) -> Result<u128> {
+    let nonce = self
+      .web3
+      .eth()
+      .transaction_count(from_account.address(), None)
+      .await?;
+    let address_0: Address = utils::zero_address();
+    let tx = safe
+      .exec_transaction(
+        to,
+        amount.into(),
+        Bytes(data),
+        0,
+        0_u64.into(),
+        0_u64.into(),
+        0_u64.into(),
+        address_0,
+        address_0,
+        Bytes(signatures),
+      )
+      .from(from_account)
+      .nonce(nonce)
+      .into_inner(); // inner TransactionBuilder
+    let gas = tx.estimate_gas().await?;
+    Ok(gas.as_u128())
   }
 
   pub async fn get_execution_logs(&self, since: Option<u64>) -> Result<Vec<ExecutionSuccess>> {

@@ -113,6 +113,7 @@ async fn main() {
       .await
       .expect("Didnt deploy");
   }
+  println!("DEPLOYED ROUTER!");
 
   // Deploy an ERC20
   // let erc20 = RustCoin::builder(&web3)
