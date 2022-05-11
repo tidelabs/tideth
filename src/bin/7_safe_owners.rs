@@ -27,7 +27,7 @@ async fn main() {
     .expect("failed to init web3");
 
   let safe_address = conf.safe_address.expect("no safe address");
-  let safe = SafeClient::new(&web3, Some(safe_address.as_str())).expect("derp2");
+  let mut safe = SafeClient::new(&web3, Some(safe_address.as_str())).expect("derp2");
 
   let mut safe_owners: Vec<H160> = conf
     .owners
