@@ -72,9 +72,17 @@ impl SafeClient {
       .from(account)
       .deploy()
       .await?;
-
     self.address = proxy.address();
     Ok(proxy.address().to_string())
+  }
+
+  pub async fn deploy_factory(&mut self, account: Account<DynTransport>) -> Result<String> {
+    let factory = GnosisSafe::builder(&self.web3)
+      // .gas(6_000_000u64.into())
+      .from(account.clone())
+      .deploy()
+      .await?;
+    Ok(factory.address().to_string())
   }
 
   pub async fn deploy_with_factory(

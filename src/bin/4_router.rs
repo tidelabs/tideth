@@ -14,10 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with tideth.  If not, see <http://www.gnu.org/licenses/>.
 
-pub mod config;
-pub mod error;
-pub mod router;
-pub mod safe;
-pub mod utils;
+use tideth::config;
+use tideth::router::RouterClient;
 
-pub type Result<T> = std::result::Result<T, error::Error>;
+#[tokio::main]
+async fn main() {
+  let net = std::env::var("NETWORK").expect("NETWORK REQUIRED");
+  let (web3, my_account, conf) = config::init_web3(net.as_str(), true)
+    .await
+    .expect("failed to init web3");
+
+  if let Some(_) = conf.router_address {
+    panic!("already a Router address");
+  }
+  let mut router = RouterClient::new(&web3, None).expect("derp");
+  let addy = router
+    .deploy(my_account.clone())
+    .await
+    .expect("Didnt deploy");
+
+  println!("Router address: {}", format!("{:?}", addy));
+}
