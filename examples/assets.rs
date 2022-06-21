@@ -69,7 +69,7 @@ async fn main() {
     .expect("Couldn't deploy the ERC20");
 
   println!("===============");
-  println!("Tether address {:?}", usdt.address());
+  println!("\"usdt_address\": {:?}", usdt.address());
   println!("===============");
-  println!("Circle address {:?}", usdc.address());
+  println!("\"usdc_address\": {:?}", usdc.address());
 }

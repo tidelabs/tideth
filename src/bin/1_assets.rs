@@ -53,7 +53,7 @@ async fn main() {
   };
 
   println!("===============");
-  println!("Tether address {:?}", usdt_address);
+  println!("\"usdt_address\": {:?}", usdt_address);
   println!("===============");
-  println!("Circle address {:?}", usdc_address);
+  println!("\"usdc_address\": {:?}", usdc_address);
 }

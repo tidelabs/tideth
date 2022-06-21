@@ -40,5 +40,5 @@ async fn main() {
     .await
     .expect("couldnt deply SAFE");
 
-  println!("Gnosis Safe address: {:?}", addy);
+  println!("\"safe_address\": {:?}", addy);
 }

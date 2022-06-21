@@ -15,6 +15,7 @@
 // along with tideth.  If not, see <http://www.gnu.org/licenses/>.
 
 pub mod config;
+pub mod erc20;
 pub mod error;
 pub mod router;
 pub mod safe;
