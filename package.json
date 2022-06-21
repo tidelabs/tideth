@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "hardhat": "hardhat node"
+  },
   "devDependencies": {
     "hardhat": "^2.6.2"
   },

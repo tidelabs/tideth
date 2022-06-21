@@ -13,25 +13,29 @@
 
 // You should have received a copy of the GNU General Public License
 // along with tideth.  If not, see <http://www.gnu.org/licenses/>.
-
 use tideth::config;
 use tideth::router::RouterClient;
+use tideth::safe::SafeClient;
 
 #[tokio::main]
 async fn main() {
   let net = std::env::var("NETWORK").expect("NETWORK REQUIRED");
-  let (web3, my_account, conf) = config::init_web3(net.as_str(), true)
+  let (web3, _, conf) = config::init_web3(net.as_str(), false)
     .await
     .expect("failed to init web3");
 
-  if let Some(_) = conf.router_address {
-    panic!("already a Router address");
-  }
-  let mut router = RouterClient::new(&web3, None).expect("derp");
-  let addy = router
-    .deploy(my_account.clone())
-    .await
-    .expect("Didnt deploy");
+  let router_address = conf.router_address.expect("no router address");
+  let router = RouterClient::new(&web3, Some(router_address.as_str())).expect("derp");
 
-  println!("\"router_address\": {}", format!("{:?}", addy));
+  let safe_address = conf.safe_address.expect("no safe address");
+  let safe = SafeClient::new(&web3, Some(safe_address.as_str())).expect("derp2");
+
+  let owner = router.owner().await.expect("couldnt call owner");
+  assert_eq!(owner, safe.address(), "safe should own router");
+  println!("Safe is owner of Router");
+
+  let owners = safe.get_owners().await.expect("couldnt call safe owners");
+  //   assert_eq!(owner, safe.address(), "owners of safe");
+  //   println!("Safe is owner of Router");
+  println!("SAFE OWNERS {:?}", owners);
 }

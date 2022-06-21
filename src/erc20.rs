@@ -14,11 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with tideth.  If not, see <http://www.gnu.org/licenses/>.
 
-pub mod config;
-pub mod erc20;
-pub mod error;
-pub mod router;
-pub mod safe;
-pub mod utils;
+use crate::Result;
+use ethcontract::{prelude::*, transport::DynTransport};
+use std::str::FromStr;
 
-pub type Result<T> = std::result::Result<T, error::Error>;
+ethcontract::contract!("https://tidefi-contracts.s3.eu-west-1.amazonaws.com/Tether.json");
+
+pub async fn balance_of(
+  web3: &Web3<DynTransport>,
+  asset_address: &str,
+  address: &str,
+) -> Result<u128> {
+  let asset_addy = H160::from_str(asset_address)?;
+  let tether = Tether::at(&web3, asset_addy);
+  let addy = H160::from_str(address)?;
+  let bal = tether.balance_of(addy).call().await?;
+  Ok(bal.as_u128())
+}

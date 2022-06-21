@@ -73,7 +73,7 @@ impl SafeClient {
       .deploy()
       .await?;
     self.address = proxy.address();
-    Ok(proxy.address().to_string())
+    Ok(format!("{:?}", proxy.address()))
   }
 
   pub async fn deploy_factory(&mut self, account: Account<DynTransport>) -> Result<String> {
@@ -82,7 +82,7 @@ impl SafeClient {
       .from(account.clone())
       .deploy()
       .await?;
-    Ok(factory.address().to_string())
+    Ok(format!("{:?}", factory.address()))
   }
 
   pub async fn deploy_with_factory(
@@ -98,13 +98,19 @@ impl SafeClient {
       .deploy()
       .await?;
     self.address = proxy.address();
-    Ok(proxy.address().to_string())
+    Ok(format!("{:?}", proxy.address()))
   }
 
   pub async fn nonce(&self) -> Result<u64> {
     let safe = GnosisSafe::at(&self.web3, self.address);
     let n = safe.nonce().call().await?;
     Ok(n.as_u64())
+  }
+
+  pub async fn get_owners(&self) -> Result<Vec<H160>> {
+    let safe = GnosisSafe::at(&self.web3, self.address);
+    let os = safe.get_owners().call().await?;
+    Ok(os)
   }
 
   pub async fn setup(

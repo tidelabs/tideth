@@ -33,5 +33,5 @@ async fn main() {
     .await
     .expect("couldnt deply singleton");
 
-  println!("Gnosis Safe factory address: {:?}", addy);
+  println!("\"safe_factory_address\": {:?}", addy);
 }

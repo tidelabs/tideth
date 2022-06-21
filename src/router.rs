@@ -96,7 +96,7 @@ impl RouterClient {
       .await?;
 
     self.address = router.address();
-    Ok(router.address().to_string())
+    Ok(format!("{:?}", router.address()))
   }
 
   pub async fn transfer_ownership(
