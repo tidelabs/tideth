@@ -2855,6 +2855,7 @@ dependencies = [
  "hex",
  "iota_stronghold",
  "libsecp256k1 0.5.0",
+ "log",
  "rand 0.8.5",
  "rustc-hex",
  "serde 1.0.136",
