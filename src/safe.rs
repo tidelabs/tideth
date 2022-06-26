@@ -16,6 +16,7 @@
 
 use crate::{error::Error, utils, Result};
 use ethcontract::{
+  errors::ExecutionError,
   prelude::*,
   tokens::Tokenize,
   transaction::TransactionResult,
@@ -294,28 +295,45 @@ impl SafeClient {
       .await?;
     // let gas_price = self.web3.eth().gas_price().await?;
     let address_0: Address = utils::zero_address();
-    let tx = safe
-      .exec_transaction(
-        to,
-        amount.into(),
-        Bytes(data),
-        0,
-        0_u64.into(),
-        0_u64.into(),
-        0_u64.into(),
-        address_0,
-        address_0,
-        // Nonce isn't included as it's a SC global
-        // Signatures
-        Bytes(signatures),
-      )
-      .from(from_account)
-      .nonce(nonce);
-    let tx_result = if let Some(g) = gas {
-      tx.gas(g.into()).send().await?
-    } else {
-      // web3 will estimate gas
-      tx.send().await?
+    let tx_result = loop {
+      let tx = safe
+        .exec_transaction(
+          to,
+          amount.into(),
+          Bytes(data.clone()),
+          0,
+          0_u64.into(),
+          0_u64.into(),
+          0_u64.into(),
+          address_0,
+          address_0,
+          // Nonce isn't included as it's a SC global
+          // Signatures
+          Bytes(signatures.clone()),
+        )
+        .from(from_account.clone())
+        .nonce(nonce);
+      let tx_sent = if let Some(g) = gas {
+        tx.gas(g.into()).send().await
+      } else {
+        // web3 will estimate gas
+        tx.send().await
+      };
+      match tx_sent {
+        Ok(r) => {
+          log::info!("exec_transaction succeeded!");
+          break r;
+        }
+        Err(e) => {
+          if let ExecutionError::ConfirmTimeout(_) = e.inner {
+            // try again! uncle block...
+            log::warn!("ExecutionError::ConfirmTimeout... retrying exec_transaction");
+            continue;
+          } else {
+            return Err(e.into());
+          }
+        }
+      };
     };
     Ok(match tx_result {
       TransactionResult::Hash(h) => (h.0.to_vec(), 0), // should not ever happen
