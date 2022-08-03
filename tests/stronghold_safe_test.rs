@@ -377,6 +377,10 @@ async fn init_account(
     })
     .expect("failed exec sepc25k61store");
 
+  stronghold
+    .write_client(&client_path)
+    .expect("couldnt write to client");
+
   let accounts = web3.accounts();
   (
     client,
