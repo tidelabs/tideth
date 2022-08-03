@@ -692,7 +692,7 @@ dependencies = [
 [[package]]
 name = "ethcontract"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#a8325e6535d082cf45db80a714389d1b02bbce4d"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
 dependencies = [
  "arrayvec 0.7.2",
  "bincode",
@@ -717,7 +717,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-common"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#a8325e6535d082cf45db80a714389d1b02bbce4d"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
 dependencies = [
  "ethabi",
  "hex",
@@ -732,7 +732,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-derive"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#a8325e6535d082cf45db80a714389d1b02bbce4d"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
 dependencies = [
  "anyhow",
  "ethcontract-common",
@@ -745,7 +745,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-generate"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#a8325e6535d082cf45db80a714389d1b02bbce4d"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
 dependencies = [
  "Inflector",
  "anyhow",
