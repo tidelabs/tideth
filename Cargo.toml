@@ -22,5 +22,6 @@ log = "0.4"
 [dev-dependencies]
 dotenv = "0.15.0"
 rand = "0.8.4"
-iota_stronghold = { git = "https://github.com/tidelabs/stronghold.rs", branch = "dev" }
+iota_stronghold = { git = "https://tributary.semantic-network.tech/semnet/Libs/stronghold.rs", branch = "feat/update-stronghold", features = ["webthree"] }
+# iota_stronghold = { git = "https://github.com/tidelabs/stronghold.rs", branch = "dev" }
 anyhow = "1.0"

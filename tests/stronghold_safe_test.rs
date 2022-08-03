@@ -19,7 +19,10 @@ use ethcontract::{
   web3::types::{TransactionRequest, U256},
   Account, Bytes, Http, Web3, H160,
 };
-use iota_stronghold::{Location, ProcResult, Procedure, ResultMessage, Stronghold};
+use iota_stronghold::{
+  procedures::{self, KeyType},
+  Client, KeyProvider, Location, Stronghold,
+};
 use tideth::{router::RouterClient, safe::SafeClient};
 
 ethcontract::contract!("artifacts/contracts/RustCoin.sol/RustCoin.json");
@@ -297,10 +300,10 @@ async fn main() {
 
 async fn signs(
   wtxdata: Bytes<Vec<u8>>,
-  strong1: Stronghold,
+  strong1: Client,
   loc1: Location,
   address1: H160,
-  strong2: Stronghold,
+  strong2: Client,
   loc2: Location,
   address2: H160,
 ) -> Vec<u8> {
@@ -318,24 +321,20 @@ async fn signs(
   signatures
 }
 
-async fn sign(msg: &Vec<u8>, stronghold: Stronghold, location: Location) -> Vec<u8> {
+async fn sign(msg: &Vec<u8>, client: Client, location: Location) -> Vec<u8> {
   let hash = keccak256(msg.as_ref());
-  match stronghold
-    .runtime_exec(Procedure::Secp256k1Sign {
+  let res = client
+    .execute_procedure(procedures::Secp256k1Sign {
       private_key: location,
       msg: Box::new(hash),
     })
-    .await
-  {
-    ProcResult::Secp256k1Sign(ResultMessage::Ok(res)) => {
-      let (sig, recid) = res;
-      let record_id = recid.as_u8() + 27;
-      let mut sigvec = sig.to_bytes().to_vec();
-      sigvec.push(record_id);
-      sigvec
-    }
-    _ => panic!("cant sign"),
-  }
+    .expect("failed to sign");
+  let arr = res.split_at(64);
+  let recid = arr.1[0];
+  let mut r_and_s = arr.0.to_vec();
+  let record_id = recid + 27; // the magic number
+  r_and_s.push(record_id);
+  r_and_s
 }
 
 fn keccak256(bytes: &[u8]) -> [u8; 32] {
@@ -351,36 +350,43 @@ async fn init_account(
   web3: &Web3<DynTransport>,
   chain_id: u64,
   keynum: u8,
-) -> (Stronghold, Location, Account<DynTransport>) {
-  let (tx, rx) = std::sync::mpsc::channel();
-  std::thread::spawn(move || {
-    let system = actix::System::new();
-    let stronghold = system
-      .block_on(Stronghold::init_stronghold_system(b"path".to_vec(), vec![]))
-      .unwrap();
-    tx.send(stronghold).unwrap();
-    system.run().expect("actix system run failed");
-  });
-  let stronghold = rx.recv().unwrap();
+) -> (Client, Location, Account<DynTransport>) {
+  let stronghold = Stronghold::default();
+  let client_path = b"strongholdb".to_vec();
 
-  let keypair_location = Location::generic("SR25519", "keypair");
+  let keypair_location = Location::generic("SECP256K1", "keypair");
+  let pass_location = Location::generic("password", "record");
 
-  match stronghold
-    .runtime_exec(Procedure::Secp256k1Store {
-      key: [keynum; 32].to_vec(),
+  let mut key = [9u8; 32];
+
+  let key_provider = KeyProvider::with_passphrase_truncated(key).expect("failed KeyProvider");
+
+  // Store keyprovider in snapshot state.
+  stronghold
+    .store_keyprovider(key_provider, pass_location.clone())
+    .expect("failed store_keyprovider");
+
+  let client = stronghold
+    .create_client(&client_path)
+    .expect("failed create_client");
+
+  client
+    .execute_procedure(procedures::GenerateKey {
       output: keypair_location.clone(),
-      hint: [0u8; 24].into(),
+      ty: KeyType::Secp256k1,
     })
-    .await
-  {
-    ProcResult::Secp256k1Generate(ResultMessage::OK) => (),
-    r => panic!("unexpected result: {:?}", r),
-  }
+    .expect("failed exec sepc25k61store");
 
   let accounts = web3.accounts();
   (
-    stronghold.clone(),
+    client,
     keypair_location.clone(),
-    Account::Stronghold(stronghold, accounts, keypair_location, Some(chain_id)),
+    Account::Stronghold(
+      stronghold,
+      client_path,
+      accounts,
+      keypair_location,
+      Some(chain_id),
+    ),
   )
 }
