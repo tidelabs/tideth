@@ -31,11 +31,11 @@ async fn main() {
   let safe = SafeClient::new(&web3, Some(safe_address.as_str())).expect("derp2");
 
   let owner = router.owner().await.expect("couldnt call owner");
-  assert_eq!(owner, safe.address(), "safe should own router");
-  println!("Safe is owner of Router");
-
   let owners = safe.get_owners().await.expect("couldnt call safe owners");
   //   assert_eq!(owner, safe.address(), "owners of safe");
   //   println!("Safe is owner of Router");
   println!("SAFE OWNERS {:?}", owners);
+
+  assert_eq!(owner, safe.address(), "safe should own router");
+  println!("Safe is owner of Router");
 }
