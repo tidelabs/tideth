@@ -130,7 +130,7 @@ async fn main() {
       .claim_ownership_data()
       .expect("could make claim_ownership_data");
     let tx_data = safe
-      .encode_data(router.address(), 0, claimdata.clone(), nonce)
+      .encode_data(router.address(), 0, claimdata.clone(), nonce, None)
       .await
       .expect("couldnt encode claim data");
 
@@ -192,7 +192,7 @@ async fn main() {
 
   // must increment nonce by one each EXEC
   let wtxdata = safe
-    .encode_data(router.address(), 0, withdrawaldata.clone(), nonce)
+    .encode_data(router.address(), 0, withdrawaldata.clone(), nonce, None)
     .await
     .expect("couldnt encode withdrawal data");
 
@@ -254,7 +254,7 @@ async fn main() {
     initial_accounts3_eth_balance.as_u128()
   );
   let ethtxdata = safe
-    .encode_eth_tx(accounts[3], send_amt, nonce)
+    .encode_eth_tx(accounts[3], send_amt, nonce, None)
     .await
     .expect("couldnt encode ETH withdrawal data");
 
@@ -357,7 +357,7 @@ async fn init_account(
   let keypair_location = Location::generic("SECP256K1", "keypair");
   let pass_location = Location::generic("password", "record");
 
-  let mut key = [9u8; 32];
+  let key = [keynum; 32];
 
   let key_provider = KeyProvider::with_passphrase_truncated(key).expect("failed KeyProvider");
 

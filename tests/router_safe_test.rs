@@ -130,7 +130,7 @@ async fn main() {
       .claim_ownership_data()
       .expect("could make claim_ownership_data");
     let tx_data = safe
-      .encode_data(router.address(), 0, claimdata.clone(), nonce)
+      .encode_data(router.address(), 0, claimdata.clone(), nonce, None)
       .await
       .expect("couldnt encode claim data");
 
@@ -162,7 +162,7 @@ async fn main() {
 
   // must increment nonce by one each EXEC
   let wtxdata = safe
-    .encode_data(router.address(), 0, withdrawaldata.clone(), nonce)
+    .encode_data(router.address(), 0, withdrawaldata.clone(), nonce, None)
     .await
     .expect("couldnt encode withdrawal data");
 

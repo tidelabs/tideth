@@ -153,29 +153,32 @@ impl SafeClient {
     amount: u128,
     data: Vec<u8>,
     nonce: u64,
+    gas: Option<u128>,
   ) -> Result<Bytes<Vec<u8>>> {
     let safe = GnosisSafe::at(&self.web3, self.address);
     let address_0: Address = utils::zero_address();
     // Get the hash of the transaction according to how Gnosis will handle it
-    let tx_data = safe
-      .encode_transaction_data(
-        // TX
-        address,
-        amount.into(),
-        Bytes(data),
-        0,
-        // Refund data
-        0_u64.into(),
-        0_u64.into(),
-        0_u64.into(),
-        address_0,
-        address_0,
-        // Nonce
-        nonce.into(),
-      )
-      .call()
-      .await?;
-    Ok(tx_data)
+    let tx_data = safe.encode_transaction_data(
+      // TX
+      address,
+      amount.into(),
+      Bytes(data),
+      0,
+      // Refund data
+      0_u64.into(),
+      0_u64.into(),
+      0_u64.into(),
+      address_0,
+      address_0,
+      // Nonce
+      nonce.into(),
+    );
+    let res = if let Some(g) = gas {
+      tx_data.gas(g.into()).call().await?
+    } else {
+      tx_data.call().await?
+    };
+    Ok(res)
   }
 
   fn _make_erc20_data(&self, to: H160, amount: u128) -> Result<Vec<u8>> {
@@ -218,13 +221,20 @@ impl SafeClient {
     to: H160,
     amount: u128,
     nonce: u64,
+    gas: Option<u128>,
   ) -> Result<Bytes<Vec<u8>>> {
     let data = self._make_erc20_data(to, amount)?;
-    Ok(self.encode_data(erc20_address, 0, data, nonce).await?)
+    Ok(self.encode_data(erc20_address, 0, data, nonce, gas).await?)
   }
 
-  pub async fn encode_eth_tx(&self, to: H160, amount: u128, nonce: u64) -> Result<Bytes<Vec<u8>>> {
-    Ok(self.encode_data(to, amount, Vec::new(), nonce).await?)
+  pub async fn encode_eth_tx(
+    &self,
+    to: H160,
+    amount: u128,
+    nonce: u64,
+    gas: Option<u128>,
+  ) -> Result<Bytes<Vec<u8>>> {
+    Ok(self.encode_data(to, amount, Vec::new(), nonce, gas).await?)
   }
 
   pub async fn exec_erc20_tx(

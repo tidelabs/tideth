@@ -37,7 +37,7 @@ async fn main() {
     Http::new("http://localhost:8545").expect("couldnt setup web3"),
   ));
 
-  let (strong1, loc1, account1) = init_account(&web3, chain_id, 1).await;
+  let (strong1, loc1, account1) = init_account(&web3, chain_id).await;
 
   let accounts = web3.eth().accounts().await.expect("getAccounts failed");
   // prefunded account
@@ -70,7 +70,7 @@ async fn main() {
       .await
       .expect("cant build tx opts");
       let accounts = web3.accounts();
-      let res = strong1
+      strong1
         .execute_web3_procedure(procedures::Web3SignTransaction {
           accounts,
           private_key: loc1,
@@ -167,7 +167,6 @@ pub async fn eth_balance(web3: &Web3<DynTransport>, addy: H160) -> u128 {
 async fn init_account(
   web3: &Web3<DynTransport>,
   chain_id: u64,
-  keynum: u8,
 ) -> (Client, Location, Account<DynTransport>) {
   let stronghold = Stronghold::default();
   let client_path = b"strongholdb".to_vec();
@@ -175,7 +174,7 @@ async fn init_account(
   let keypair_location = Location::generic("SECP256K1", "keypair");
   let pass_location = Location::generic("password", "record");
 
-  let mut key = [9u8; 32];
+  let key = [9u8; 32];
 
   let key_provider = KeyProvider::with_passphrase_truncated(key).expect("failed KeyProvider");
 
