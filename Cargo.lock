@@ -692,7 +692,7 @@ dependencies = [
 [[package]]
 name = "ethcontract"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
 dependencies = [
  "arrayvec 0.7.2",
  "bincode",
@@ -717,7 +717,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-common"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
 dependencies = [
  "ethabi",
  "hex",
@@ -732,7 +732,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-derive"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
 dependencies = [
  "anyhow",
  "ethcontract-common",
@@ -745,7 +745,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-generate"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=feat/update-stronghold#5be634581700d7f0e75c5cad3073259b6562dadb"
+source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
 dependencies = [
  "Inflector",
  "anyhow",
@@ -1257,25 +1257,7 @@ dependencies = [
 [[package]]
 name = "iota-crypto"
 version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f03717e934972fad6f1c9b4cd25f662e1753b58a7f76e3dceadeb646e034b252"
-dependencies = [
- "aead",
- "blake2",
- "chacha20poly1305",
- "curve25519-dalek 3.2.0",
- "digest 0.10.3",
- "generic-array 0.14.5",
- "getrandom 0.2.6",
- "hmac 0.12.1",
- "sha2 0.10.2",
- "x25519-dalek",
-]
-
-[[package]]
-name = "iota-crypto"
-version = "0.12.1"
-source = "git+https://tributary.semantic-network.tech/semnet/Libs/crypto.rs?branch=feat/update-v8#224d8118b7aadb419cfda3f74813e83318254965"
+source = "git+https://github.com/tidelabs/crypto.rs?branch=dev#d462cc7e450fb07b1dab613114d398318fff81f6"
 dependencies = [
  "aead",
  "aes",
@@ -1302,12 +1284,12 @@ dependencies = [
 [[package]]
 name = "iota_stronghold"
 version = "0.8.1"
-source = "git+https://tributary.semantic-network.tech/semnet/Libs/stronghold.rs?branch=feat/update-stronghold#ffb42ae3dfd03052051d11b5151304db1facf2c0"
+source = "git+https://github.com/tidelabs/stronghold.rs?branch=dev#e3ca7c85be9753134b38a8a5ee3bab2ad7667e87"
 dependencies = [
  "bincode",
  "futures",
  "hkdf",
- "iota-crypto 0.12.1 (git+https://tributary.semantic-network.tech/semnet/Libs/crypto.rs?branch=feat/update-v8)",
+ "iota-crypto",
  "rust-argon2",
  "serde 1.0.136",
  "stronghold-derive",
@@ -2772,7 +2754,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 [[package]]
 name = "stronghold-derive"
 version = "0.3.1"
-source = "git+https://tributary.semantic-network.tech/semnet/Libs/stronghold.rs?branch=feat/update-stronghold#ffb42ae3dfd03052051d11b5151304db1facf2c0"
+source = "git+https://github.com/tidelabs/stronghold.rs?branch=dev#e3ca7c85be9753134b38a8a5ee3bab2ad7667e87"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2782,7 +2764,7 @@ dependencies = [
 [[package]]
 name = "stronghold-rlu"
 version = "0.4.3"
-source = "git+https://tributary.semantic-network.tech/semnet/Libs/stronghold.rs?branch=feat/update-stronghold#ffb42ae3dfd03052051d11b5151304db1facf2c0"
+source = "git+https://github.com/tidelabs/stronghold.rs?branch=dev#e3ca7c85be9753134b38a8a5ee3bab2ad7667e87"
 dependencies = [
  "atom",
  "lazy_static",
@@ -2794,10 +2776,10 @@ dependencies = [
 [[package]]
 name = "stronghold-runtime"
 version = "0.5.2"
-source = "git+https://tributary.semantic-network.tech/semnet/Libs/stronghold.rs?branch=feat/update-stronghold#ffb42ae3dfd03052051d11b5151304db1facf2c0"
+source = "git+https://github.com/tidelabs/stronghold.rs?branch=dev#e3ca7c85be9753134b38a8a5ee3bab2ad7667e87"
 dependencies = [
  "dirs",
- "iota-crypto 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "iota-crypto",
  "libc",
  "libsodium-sys",
  "log",
@@ -2812,7 +2794,7 @@ dependencies = [
 [[package]]
 name = "stronghold-utils"
 version = "0.4.1"
-source = "git+https://tributary.semantic-network.tech/semnet/Libs/stronghold.rs?branch=feat/update-stronghold#ffb42ae3dfd03052051d11b5151304db1facf2c0"
+source = "git+https://github.com/tidelabs/stronghold.rs?branch=dev#e3ca7c85be9753134b38a8a5ee3bab2ad7667e87"
 dependencies = [
  "rand 0.8.5",
  "stronghold-derive",
@@ -2821,12 +2803,12 @@ dependencies = [
 [[package]]
 name = "stronghold_engine"
 version = "0.5.3"
-source = "git+https://tributary.semantic-network.tech/semnet/Libs/stronghold.rs?branch=feat/update-stronghold#ffb42ae3dfd03052051d11b5151304db1facf2c0"
+source = "git+https://github.com/tidelabs/stronghold.rs?branch=dev#e3ca7c85be9753134b38a8a5ee3bab2ad7667e87"
 dependencies = [
  "anyhow",
  "dirs-next",
  "hex",
- "iota-crypto 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "iota-crypto",
  "once_cell",
  "paste",
  "serde 1.0.136",
