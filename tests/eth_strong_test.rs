@@ -24,7 +24,10 @@ use ethcontract::{
   },
   Account, Http, Web3, H160,
 };
-use iota_stronghold::{Location, ProcResult, Procedure, ResultMessage, Stronghold};
+use iota_stronghold::{
+  procedures::{self, KeyType},
+  Client, KeyProvider, Location, Stronghold,
+};
 use tokio::time::{sleep, Duration};
 
 #[tokio::test]
@@ -34,17 +37,17 @@ async fn main() {
     Http::new("http://localhost:8545").expect("couldnt setup web3"),
   ));
 
-  let (strong1, loc1, account1) = init_account(&web3, chain_id, 1).await;
+  let (strong1, loc1, account1) = init_account(&web3, chain_id).await;
 
   let accounts = web3.eth().accounts().await.expect("getAccounts failed");
   // prefunded account
   let zero_account: Account<DynTransport> = Account::Local(accounts[0], None);
   let zero_address = zero_account.address();
 
-  let n = 1000;
+  let n = 3;
   let mut i = 0;
   while i < n {
-    let strong1 = strong1.clone();
+    let strong1: Client = strong1.clone();
     let loc1 = loc1.clone();
     let account1 = account1.clone();
     let web3 = web3.clone();
@@ -67,20 +70,14 @@ async fn main() {
       .await
       .expect("cant build tx opts");
       let accounts = web3.accounts();
-      let res = strong1
-        .web3_runtime_exec(Procedure::Web3SignTransaction {
+      strong1
+        .execute_web3_procedure(procedures::Web3SignTransaction {
           accounts,
           private_key: loc1,
           tx: tx,
         })
-        .await;
-      println!("SIGN NOW {}", i);
-      match res {
-        ProcResult::Web3SignTransaction(ResultMessage::Ok(_)) => {
-          println!("=> {}", i);
-        }
-        _ => println!("wtf"),
-      }
+        .expect("execute_procedure fail");
+      println!("=> {}", i);
     });
     i = i + 1;
   }
@@ -170,37 +167,47 @@ pub async fn eth_balance(web3: &Web3<DynTransport>, addy: H160) -> u128 {
 async fn init_account(
   web3: &Web3<DynTransport>,
   chain_id: u64,
-  keynum: u8,
-) -> (Stronghold, Location, Account<DynTransport>) {
-  let (tx, rx) = std::sync::mpsc::channel();
-  std::thread::spawn(move || {
-    let system = actix::System::new();
-    let stronghold = system
-      .block_on(Stronghold::init_stronghold_system(b"path".to_vec(), vec![]))
-      .unwrap();
-    tx.send(stronghold).unwrap();
-    system.run().expect("actix system run failed");
-  });
-  let stronghold = rx.recv().unwrap();
+) -> (Client, Location, Account<DynTransport>) {
+  let stronghold = Stronghold::default();
+  let client_path = b"strongholdb".to_vec();
 
   let keypair_location = Location::generic("SECP256K1", "keypair");
+  let pass_location = Location::generic("password", "record");
 
-  match stronghold
-    .runtime_exec(Procedure::Secp256k1Store {
-      key: [keynum; 32].to_vec(),
+  let key = [9u8; 32];
+
+  let key_provider = KeyProvider::with_passphrase_truncated(key).expect("failed KeyProvider");
+
+  // Store keyprovider in snapshot state.
+  stronghold
+    .store_keyprovider(key_provider, pass_location.clone())
+    .expect("failed store_keyprovider");
+
+  let client = stronghold
+    .create_client(&client_path)
+    .expect("failed create_client");
+
+  client
+    .execute_procedure(procedures::GenerateKey {
       output: keypair_location.clone(),
-      hint: [0u8; 24].into(),
+      ty: KeyType::Secp256k1,
     })
-    .await
-  {
-    ProcResult::Secp256k1Generate(ResultMessage::OK) => (),
-    r => panic!("unexpected result: {:?}", r),
-  }
+    .expect("failed exec sepc25k61store");
+
+  stronghold
+    .write_client(&client_path)
+    .expect("couldnt write to client");
 
   let accounts = web3.accounts();
   (
-    stronghold.clone(),
+    client,
     keypair_location.clone(),
-    Account::Stronghold(stronghold, accounts, keypair_location, Some(chain_id)),
+    Account::Stronghold(
+      stronghold,
+      client_path,
+      accounts,
+      keypair_location,
+      Some(chain_id),
+    ),
   )
 }

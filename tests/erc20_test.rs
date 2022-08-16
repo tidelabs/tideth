@@ -72,7 +72,7 @@ async fn main() {
 
   let nonce = 0;
   let tx_data = safe
-    .encode_erc20_tx(erc20.address(), accounts[3], 100, nonce)
+    .encode_erc20_tx(erc20.address(), accounts[3], 100, nonce, None)
     .await
     .expect("couldnt build erc20 tx");
 
