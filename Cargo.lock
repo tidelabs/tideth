@@ -692,7 +692,7 @@ dependencies = [
 [[package]]
 name = "ethcontract"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
+source = "git+https://github.com/tidelabs/ethcontract?branch=dev#0f51e84046d1df0fb10a435ecd1367c078c9d663"
 dependencies = [
  "arrayvec 0.7.2",
  "bincode",
@@ -717,7 +717,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-common"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
+source = "git+https://github.com/tidelabs/ethcontract?branch=dev#0f51e84046d1df0fb10a435ecd1367c078c9d663"
 dependencies = [
  "ethabi",
  "hex",
@@ -732,7 +732,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-derive"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
+source = "git+https://github.com/tidelabs/ethcontract?branch=dev#0f51e84046d1df0fb10a435ecd1367c078c9d663"
 dependencies = [
  "anyhow",
  "ethcontract-common",
@@ -745,7 +745,7 @@ dependencies = [
 [[package]]
 name = "ethcontract-generate"
 version = "0.15.3"
-source = "git+https://tributary.semantic-network.tech/semnet/tidefi/quorum/ethcontract-rs?branch=dev#0f665032618f9328647dc817bd8f85cd2c3873fa"
+source = "git+https://github.com/tidelabs/ethcontract?branch=dev#0f51e84046d1df0fb10a435ecd1367c078c9d663"
 dependencies = [
  "Inflector",
  "anyhow",
