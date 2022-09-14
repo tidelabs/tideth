@@ -226,6 +226,27 @@ impl RouterClient {
     Ok(data)
   }
 
+  fn _make_remove_data(&self, token: Address) -> Result<Vec<u8>> {
+    #[allow(deprecated)]
+    let accept = Function {
+      name: "removeToken".to_owned(),
+      inputs: vec![Param {
+        name: "".to_owned(),
+        kind: ParamType::Address,
+        internal_type: None,
+      }],
+      outputs: vec![],
+      constant: None,
+      state_mutability: Default::default(),
+    };
+    let tx = accept.encode_input(&vec![token.into_token()]);
+    if let Err(e) = tx {
+      return Err(Error::Other(e.to_string()));
+    }
+    let data = tx.unwrap();
+    Ok(data)
+  }
+
   pub fn eth_withdrawal_data(&self, to: H160, amount: u128) -> Result<Vec<u8>> {
     let eth: Address = utils::zero_address();
     self._make_data(to, eth, amount)
@@ -240,6 +261,10 @@ impl RouterClient {
   }
 
   pub fn accept_token_data(&self, asset: Address) -> Result<Vec<u8>> {
+    self._make_accept_data(asset)
+  }
+
+  pub fn remove_token_data(&self, asset: Address) -> Result<Vec<u8>> {
     self._make_accept_data(asset)
   }
 
