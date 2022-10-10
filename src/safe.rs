@@ -325,7 +325,7 @@ impl SafeClient {
         .from(from_account.clone())
         .nonce(nonce);
       let tx_sent = if let Some(g) = gas {
-        let gas_to_pay = g as f64 * 1.1f64.powf(iteration as f64);
+        let gas_to_pay = g as f64 * 1.11f64.powf(iteration as f64);
         iteration = iteration + 1;
         tx.gas((gas_to_pay as u128).into()).send().await
       } else {
