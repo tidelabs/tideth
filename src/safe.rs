@@ -305,6 +305,7 @@ impl SafeClient {
       .await?;
     // let gas_price = self.web3.eth().gas_price().await?;
     let address_0: Address = utils::zero_address();
+    let mut iteration = 0;
     let tx_result = loop {
       let tx = safe
         .exec_transaction(
@@ -324,7 +325,9 @@ impl SafeClient {
         .from(from_account.clone())
         .nonce(nonce);
       let tx_sent = if let Some(g) = gas {
-        tx.gas(g.into()).send().await
+        let gas_to_pay = g as f64 * 1.1f64.powf(iteration as f64);
+        iteration = iteration + 1;
+        tx.gas((gas_to_pay as u128).into()).send().await
       } else {
         // web3 will estimate gas
         tx.send().await
