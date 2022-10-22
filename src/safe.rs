@@ -43,6 +43,14 @@ pub struct ExecutionSuccess {
   pub inner_tx_hash: Vec<u8>, // the tx_hash of the executed SAFE tx (of the router withdrawal for example)
 }
 
+#[derive(Clone)]
+pub struct ExecResult {
+  pub txid: Vec<u8>,
+  pub gas_used: u128,
+  pub gas_price: u128,
+  pub block_number: u64,
+}
+
 impl SafeClient {
   pub fn new(web3: &Web3<DynTransport>, address: Option<&str>) -> Result<Self> {
     Ok(Self {
@@ -245,7 +253,7 @@ impl SafeClient {
     amount: u128,
     signatures: Vec<u8>,
     gas: Option<u128>,
-  ) -> Result<(Vec<u8>, u128)> {
+  ) -> Result<ExecResult> {
     let data = self._make_erc20_data(to, amount)?;
     let safe = GnosisSafe::at(&self.web3, self.address);
     Ok(
@@ -262,7 +270,7 @@ impl SafeClient {
     amount: u128,
     signatures: Vec<u8>,
     gas: Option<u128>,
-  ) -> Result<(Vec<u8>, u128)> {
+  ) -> Result<ExecResult> {
     let safe = GnosisSafe::at(&self.web3, self.address);
     Ok(
       self
@@ -279,7 +287,7 @@ impl SafeClient {
     signatures: Vec<u8>,
     value: u128,
     gas: Option<u128>,
-  ) -> Result<(Vec<u8>, u128)> {
+  ) -> Result<ExecResult> {
     let safe = GnosisSafe::at(&self.web3, self.address);
     Ok(
       self
@@ -297,7 +305,7 @@ impl SafeClient {
     data: Vec<u8>,
     signatures: Vec<u8>,
     gas: Option<u128>,
-  ) -> Result<(Vec<u8>, u128)> {
+  ) -> Result<ExecResult> {
     let nonce = self
       .web3
       .eth()
@@ -349,14 +357,34 @@ impl SafeClient {
       };
     };
     Ok(match tx_result {
-      TransactionResult::Hash(h) => (h.0.to_vec(), 0), // should not ever happen
+      TransactionResult::Hash(h) => ExecResult {
+        txid: h.0.to_vec(),
+        gas_used: 0,
+        gas_price: 0,
+        block_number: 0,
+      }, // should not ever happen
       TransactionResult::Receipt(r) => {
         let gas = if let Some(g) = r.gas_used {
           g.as_u128()
         } else {
           0
         };
-        (r.transaction_hash.0.to_vec(), gas)
+        let gas_price = if let Some(gp) = r.effective_gas_price {
+          gp.as_u128()
+        } else {
+          0
+        };
+        let block_number = if let Some(bn) = r.block_number {
+          bn.as_u64()
+        } else {
+          0
+        };
+        ExecResult {
+          txid: r.transaction_hash.0.to_vec(),
+          gas_used: gas,
+          gas_price,
+          block_number,
+        }
       }
     })
   }
