@@ -48,6 +48,7 @@ pub struct ExecResult {
   pub txid: Vec<u8>,
   pub gas_used: u128,
   pub gas_price: u128,
+  pub block_number: u64,
 }
 
 impl SafeClient {
@@ -360,6 +361,7 @@ impl SafeClient {
         txid: h.0.to_vec(),
         gas_used: 0,
         gas_price: 0,
+        block_number: 0,
       }, // should not ever happen
       TransactionResult::Receipt(r) => {
         let gas = if let Some(g) = r.gas_used {
@@ -372,10 +374,16 @@ impl SafeClient {
         } else {
           0
         };
+        let block_number = if let Some(bn) = r.block_number {
+          bn.as_u64()
+        } else {
+          0
+        };
         ExecResult {
           txid: r.transaction_hash.0.to_vec(),
           gas_used: gas,
-          gas_price: gas_price,
+          gas_price,
+          block_number,
         }
       }
     })
