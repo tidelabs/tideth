@@ -16,6 +16,7 @@
 
 use crate::{error::Error, utils, Result};
 use ethcontract::{
+  errors::ExecutionError,
   prelude::*,
   tokens::Tokenize,
   transaction::TransactionResult,
@@ -321,13 +322,26 @@ impl SafeClient {
       )
       .from(from_account.clone())
       .nonce(nonce);
-    let tx_result = if let Some(g) = gas {
+    let tx_sent = if let Some(g) = gas {
       // let gas_to_pay = g as f64 * 1.11f64.powf(iteration as f64);
       tx.gas(g.into()).send().await
     } else {
       // web3 will estimate gas
       tx.send().await
-    }?;
+    };
+    let tx_result = match tx_sent {
+      Ok(r) => r,
+      Err(e) => {
+        if let ExecutionError::ConfirmTimeout(result) = &e.inner {
+          let failed_txid = match &**result {
+            TransactionResult::Hash(h) => h.0.to_vec(), // should not ever happen
+            TransactionResult::Receipt(r) => r.transaction_hash.0.to_vec(),
+          };
+          log::warn!("ExecutionError::ConfirmTimeout... {:?}", failed_txid);
+        }
+        return Err(e.into());
+      }
+    };
     log::info!("exec_transaction succeeded!");
     Ok(match tx_result {
       TransactionResult::Hash(h) => (h.0.to_vec(), 0), // should not ever happen
