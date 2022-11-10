@@ -313,49 +313,44 @@ impl SafeClient {
       .await?;
     // let gas_price = self.web3.eth().gas_price().await?;
     let address_0: Address = utils::zero_address();
-    let mut iteration = 0;
-    let tx_result = loop {
-      let tx = safe
-        .exec_transaction(
-          to,
-          amount.into(),
-          Bytes(data.clone()),
-          0,
-          0_u64.into(),
-          0_u64.into(),
-          0_u64.into(),
-          address_0,
-          address_0,
-          // Nonce isn't included as it's a SC global
-          // Signatures
-          Bytes(signatures.clone()),
-        )
-        .from(from_account.clone())
-        .nonce(nonce);
-      let tx_sent = if let Some(g) = gas {
-        let gas_to_pay = g as f64 * 1.11f64.powf(iteration as f64);
-        iteration = iteration + 1;
-        tx.gas((gas_to_pay as u128).into()).send().await
-      } else {
-        // web3 will estimate gas
-        tx.send().await
-      };
-      match tx_sent {
-        Ok(r) => {
-          log::info!("exec_transaction succeeded!");
-          break r;
-        }
-        Err(e) => {
-          if let ExecutionError::ConfirmTimeout(_) = e.inner {
-            // try again! uncle block...
-            log::warn!("ExecutionError::ConfirmTimeout... retrying exec_transaction");
-            continue;
-          } else {
-            return Err(e.into());
-          }
-        }
-      };
+    let tx = safe
+      .exec_transaction(
+        to,
+        amount.into(),
+        Bytes(data.clone()),
+        0,
+        0_u64.into(),
+        0_u64.into(),
+        0_u64.into(),
+        address_0,
+        address_0,
+        // Nonce isn't included as it's a SC global
+        // Signatures
+        Bytes(signatures.clone()),
+      )
+      .from(from_account.clone())
+      .nonce(nonce);
+    let tx_sent = if let Some(g) = gas {
+      // let gas_to_pay = g as f64 * 1.11f64.powf(iteration as f64);
+      tx.gas(g.into()).send().await
+    } else {
+      // web3 will estimate gas
+      tx.send().await
     };
+    let tx_result = match tx_sent {
+      Ok(r) => r,
+      Err(e) => {
+        if let ExecutionError::ConfirmTimeout(result) = &e.inner {
+          let failed_txid = match &**result {
+            TransactionResult::Hash(h) => h.0.to_vec(), // should not ever happen
+            TransactionResult::Receipt(r) => r.transaction_hash.0.to_vec(),
+          };
+          log::warn!("ExecutionError::ConfirmTimeout... {:?}", failed_txid);
+        }
+        return Err(e.into());
+      }
+    };
+    log::info!("exec_transaction succeeded!");
     Ok(match tx_result {
       TransactionResult::Hash(h) => ExecResult {
         txid: h.0.to_vec(),

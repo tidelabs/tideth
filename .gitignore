@@ -10,3 +10,4 @@ artifacts
 yarn.lock
 package-lock.json
 config/*.json
+config.zip
