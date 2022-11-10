@@ -340,8 +340,10 @@ impl SafeClient {
         Err(e) => {
           if let ExecutionError::ConfirmTimeout(_) = e.inner {
             // try again! uncle block...
-            log::warn!("ExecutionError::ConfirmTimeout... retrying exec_transaction");
-            continue;
+            log::warn!("ExecutionError::ConfirmTimeout");
+            log::warn!("=> amount {:?}, address {:?}", amount, to);
+            // continue;
+            return Err(e.into());
           } else {
             return Err(e.into());
           }
