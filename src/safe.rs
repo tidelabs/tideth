@@ -340,14 +340,19 @@ impl SafeClient {
     let tx_result = match tx_sent {
       Ok(r) => r,
       Err(e) => {
-        if let ExecutionError::ConfirmTimeout(result) = &e.inner {
-          let failed_txid = match &**result {
+        if let ExecutionError::ConfirmTimeout(result) = e.inner {
+          let failed_txid = match &*result {
             TransactionResult::Hash(h) => h.0.to_vec(), // should not ever happen
             TransactionResult::Receipt(r) => r.transaction_hash.0.to_vec(),
           };
           log::warn!("ExecutionError::ConfirmTimeout... {:?}", failed_txid);
+          return Err(Error::ConfirmationTimeout(format!(
+            "0x{}",
+            hex::encode(failed_txid)
+          )));
+        } else {
+          return Err(e.into());
         }
-        return Err(e.into());
       }
     };
     log::info!("exec_transaction succeeded!");

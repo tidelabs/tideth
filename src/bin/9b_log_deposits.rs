@@ -15,8 +15,7 @@
 // along with tideth.  If not, see <http://www.gnu.org/licenses/>.
 use ethcontract::H256;
 use std::convert::TryInto;
-use tideth::config;
-use tideth::router::RouterClient;
+use tideth::{config, router::RouterClient};
 
 #[tokio::main]
 async fn main() {

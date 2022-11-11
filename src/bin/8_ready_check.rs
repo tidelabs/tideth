@@ -16,9 +16,7 @@
 
 use ethcontract::H160;
 use std::str::FromStr;
-use tideth::config;
-use tideth::router::RouterClient;
-use tideth::safe::SafeClient;
+use tideth::{config, router::RouterClient, safe::SafeClient};
 
 #[tokio::main]
 async fn main() {

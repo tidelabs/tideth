@@ -16,8 +16,7 @@
 
 use ethcontract::{Address, H160};
 use std::str::FromStr;
-use tideth::config;
-use tideth::safe::SafeClient;
+use tideth::{config, safe::SafeClient};
 
 #[tokio::main]
 async fn main() {
