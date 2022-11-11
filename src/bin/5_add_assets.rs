@@ -16,8 +16,7 @@
 
 use ethcontract::Address;
 use std::str::FromStr;
-use tideth::config;
-use tideth::router::RouterClient;
+use tideth::{config, router::RouterClient};
 
 #[tokio::main]
 async fn main() {

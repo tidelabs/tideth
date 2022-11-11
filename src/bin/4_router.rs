@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with tideth.  If not, see <http://www.gnu.org/licenses/>.
 
-use tideth::config;
-use tideth::router::RouterClient;
+use tideth::{config, router::RouterClient};
 
 #[tokio::main]
 async fn main() {

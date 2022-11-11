@@ -28,6 +28,8 @@ pub enum Error {
   HexError(#[from] hex::FromHexError),
   #[error("hex error: {0}")]
   CHexError(#[from] rustc_hex::FromHexError),
+  #[error("ConfirmationTimeout: {0}")]
+  ConfirmationTimeout(String),
   #[error("error: {0}")]
   Other(String),
 }
